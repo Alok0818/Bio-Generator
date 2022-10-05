@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./App.css";
-import "./pic2.png";
+import "../public/main.png";
+import "../public/pic1.jpg";
+import "../public/pic2.png";
+import "../public/pic3.jpg";
 
 function App() {
   const [name, setName] = useState("Alok");
@@ -12,7 +15,7 @@ function App() {
   const [occupation, setOccupation] = useState("investor");
   const [religion, setReligion] = useState("Hindu");
   const [meeting, setMeeting] = useState("Just Conversation");
-  const [image, setimage] = useState("./profile.png");
+  const [image, setImage] = useState("./main.png");
   const [gender, setGender] = useState("male");
   const [to, setTo] = useState("");
   const [from, setForm] = useState("");
@@ -125,6 +128,11 @@ function App() {
   };
   console.log(gender);
 
+  const generateRandomImage = () => {
+    let schoolArray = ["./pic1.jpg", "./pic2.png", "/pic3.jpg"];
+    setImage(schoolArray[Math.floor(Math.random() * 4)]);
+  };
+
   // ---------translate------
 
   const [inputText, setInputText] = useState("");
@@ -178,6 +186,7 @@ function App() {
           <div className="box">
             <label>Profile photo</label>
             <input type="file" onChange={photoUpload}></input>
+            <button onClick={generateRandomImage}>Random Image</button>
           </div>
 
           <div className="box">
