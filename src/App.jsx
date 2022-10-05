@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import "./App.css";
+import "./pic2.png";
 
 function App() {
   const [name, setName] = useState("Alok");
@@ -10,7 +12,7 @@ function App() {
   const [occupation, setOccupation] = useState("investor");
   const [religion, setReligion] = useState("Hindu");
   const [meeting, setMeeting] = useState("Just Conversation");
-  const [image, setimage] = useState("");
+  const [image, setimage] = useState("./profile.png");
   const [gender, setGender] = useState("male");
   const [to, setTo] = useState("");
   const [from, setForm] = useState("");
@@ -67,7 +69,12 @@ function App() {
     setGender(e.target.value);
   };
   const generateRandomSchool = () => {
-    let schoolArray = ["SCSMV", "sant tukaram school", "rayat school", "Phunde"];
+    let schoolArray = [
+      "SCSMV",
+      "sant tukaram school",
+      "rayat school",
+      "Phunde",
+    ];
     setSchool(schoolArray[Math.floor(Math.random() * 4)]);
     console.log();
   };
@@ -88,7 +95,13 @@ function App() {
   };
 
   const generateRandomOccupation = () => {
-    let OccuptionArray = ["engineer", "doctor", "businessman", "investor","commerce"];
+    let OccuptionArray = [
+      "engineer",
+      "doctor",
+      "businessman",
+      "investor",
+      "commerce",
+    ];
     setOccupation(OccuptionArray[Math.floor(Math.random() * 4)]);
     console.log();
   };
@@ -112,11 +125,54 @@ function App() {
   };
   console.log(gender);
 
+  // ---------translate------
+
+  const [inputText, setInputText] = useState("");
+  const [resultText, setResultText] = useState("");
+  const [selectedLanguageKey, setLanguageKey] = useState("");
+  const [languagesList, setLanguagesList] = useState([]);
+  const [detectLanguageKey, setdetectedLanguageKey] = useState("");
+
+  const getLanguageSource = () => {
+    axios
+      .post(`https://libretranslate.de/detect`, {
+        q: inputText,
+      })
+      .then((response) => {
+        setdetectedLanguageKey(response.data[0].language);
+      });
+  };
+  const translateText = () => {
+    setResultText(inputText);
+
+    getLanguageSource();
+
+    let data = {
+      q: inputText,
+      source: detectLanguageKey,
+      target: selectedLanguageKey,
+    };
+    axios.post(`https://libretranslate.de/translate`, data).then((response) => {
+      setResultText(response.data.translatedText);
+    });
+  };
+
+  const languageKey = (selectedLanguage) => {
+    setLanguageKey(selectedLanguage.target.value);
+  };
+
+  useEffect(() => {
+    axios.get(`https://libretranslate.de/languages`).then((response) => {
+      setLanguagesList(response.data);
+    });
+
+    getLanguageSource();
+  }, [inputText]);
+
   return (
     <div className="App" id="app">
-      <h1 className="heading">Bio - Generator</h1>
+      <h1 className="heading">Bio Generator</h1>
       <div className="container">
-        
         <div className="option">
           <h2 className="box">Options</h2>
           <div className="box">
@@ -203,14 +259,17 @@ function App() {
               checked={isCheckedReligion}
               onChange={handleOnChangeReligion}
             ></input>
-            <label>Religious background</label>
+            <label>Religious Background</label>
+            <br />
             <textarea
+              className="textarea"
               rows="5"
               cols="20"
               value={religion}
               onChange={handleReligion}
             ></textarea>
-            <button onClick={generateRandomReligion}>Random religion</button>
+            <br />
+            <button onClick={generateRandomReligion}>Random Religion</button>
           </div>
           <div className="box">
             <input
@@ -228,7 +287,7 @@ function App() {
                 color: "#222",
               }}
             >
-              meeting reason
+              Reason for meeting with missionaries
             </label>
             <textarea
               className="textarea"
@@ -239,36 +298,50 @@ function App() {
             ></textarea>
             <button
               className="selectbutton"
-              onClick={() => setMeeting("for peace of mind")}
+              onClick={() =>
+                setMeeting(
+                  `wants to know if God really does exist and how that affects ${name}`
+                )
+              }
             >
-              For peace
+              Restoration
             </button>
             <button
               className="selectbutton"
-              onClick={() => setMeeting("for personal reason")}
+              onClick={() =>
+                setMeeting(
+                  `has been very stressed out with school and feels like ${name} life has no purpose or direction.${name} is hoping to change that by meeting with the missionaries`
+                )
+              }
             >
-              For personal reason
+              Plan of Salvation
             </button>
             <button
               className="selectbutton"
-              onClick={() => setMeeting("for payer to fill energetic ")}
+              onClick={() =>
+                setMeeting(
+                  `often worries that God is disappointed in ${name} for not following him better and wants to know how to change`
+                )
+              }
             >
-              For prayer
+              Gospel of Christ
             </button>
           </div>
         </div>
 
         <div className="result" id="result">
-          <h2 className="box">Result</h2>
-
+          <h2 className="box" id="box">
+            Result
+          </h2>
+          
+          <div className="box" id="rightbox">
           <div className="imagediv">
             {image ? <img src={image} alt="profile photo" /> : null}
           </div>
 
-          <div className="box">
-            {name} {isCheckedLocation ? `is from the ${location}` : null}{" "}.
+            {name} {isCheckedLocation ? `is from the ${location}` : null} .
             {isCheckedSchool
-              ?  `${
+              ? `${
                   gender == "male" ? "He" : "She"
                 } is studying ${stream} at ${school}`
               : null}
@@ -283,6 +356,37 @@ function App() {
               : null}{" "}
             {gender == "male" ? "He" : "She"}{" "}
             {isChecked ? `meet you for ${meeting}` : null}
+          </div>
+          <h2 className="box" id="box">
+            Translate
+          </h2>
+
+          <div className="box">
+            <textarea
+              className="textarea"
+              rows="5"
+              cols="20"
+              placeholder="Type Text to Translate.."
+              onChange={(e) => setInputText(e.target.value)}
+            ></textarea>
+          </div>
+          <div className="box">
+            <select className="language-select" onChange={languageKey}>
+              <option>Please Select Language..</option>
+              {languagesList.map((language) => {
+                return <option value={language.code}>{language.name}</option>;
+              })}
+            </select>
+          </div>
+          <div className="box">
+            <textarea
+              className="textarea"
+              placeholder="Result Translation.."
+              rows="5"
+              cols="20"
+              value={resultText}
+            ></textarea>
+            <button onClick={translateText}>Translate</button>
           </div>
         </div>
       </div>
