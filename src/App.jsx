@@ -118,7 +118,7 @@ function App() {
     const reader = new FileReader();
     const file = e.target.files[0];
     reader.onloadend = () => {
-      setimage(reader.result);
+      setImage(reader.result);
       this.setState({
         file: file,
         imagePreviewUrl: reader.result,
@@ -126,7 +126,7 @@ function App() {
     };
     reader.readAsDataURL(file);
   };
-  console.log(gender);
+  // console.log(gender);
 
   const generateRandomImage = () => {
     let schoolArray = ["./pic1.jpg", "./pic2.png", "/pic3.jpg"];
