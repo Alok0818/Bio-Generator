@@ -16,6 +16,8 @@ function App() {
   const [religion, setReligion] = useState("Hindu");
   const [meeting, setMeeting] = useState("Just Conversation");
   const [image, setImage] = useState("./main.png");
+  const inputRef = useRef();
+  const [source, setSource] = useState();
   const [gender, setGender] = useState("male");
   const [to, setTo] = useState("");
   const [from, setForm] = useState("");
@@ -130,52 +132,62 @@ function App() {
 
   const generateRandomImage = () => {
     let schoolArray = ["./pic1.jpg", "./pic2.png", "/pic3.jpg"];
-    setImage(schoolArray[Math.floor(Math.random() * 4)]);
+    setImage(schoolArray[Math.floor(Math.random() * 3)]);
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    const url = URL.createObjectURL(file);
+    setSource(url);
+  };
+
+  const handleChoose = (event) => {
+    inputRef.current.click();
   };
 
   // ---------translate------
 
-  const [inputText, setInputText] = useState("");
-  const [resultText, setResultText] = useState("");
-  const [selectedLanguageKey, setLanguageKey] = useState("");
-  const [languagesList, setLanguagesList] = useState([]);
-  const [detectLanguageKey, setdetectedLanguageKey] = useState("");
+  // const [inputText, setInputText] = useState("");
+  // const [resultText, setResultText] = useState("");
+  // const [selectedLanguageKey, setLanguageKey] = useState("");
+  // const [languagesList, setLanguagesList] = useState([]);
+  // const [detectLanguageKey, setdetectedLanguageKey] = useState("");
 
-  const getLanguageSource = () => {
-    axios
-      .post(`https://libretranslate.de/detect`, {
-        q: inputText,
-      })
-      .then((response) => {
-        setdetectedLanguageKey(response.data[0].language);
-      });
-  };
-  const translateText = () => {
-    setResultText(inputText);
+  // const getLanguageSource = () => {
+  //   axios
+  //     .post(`https://libretranslate.de/detect`, {
+  //       q: inputText,
+  //     })
+  //     .then((response) => {
+  //       setdetectedLanguageKey(response.data[0].language);
+  //     });
+  // };
+  // const translateText = () => {
+  //   setResultText(inputText);
 
-    getLanguageSource();
+  //   getLanguageSource();
 
-    let data = {
-      q: inputText,
-      source: detectLanguageKey,
-      target: selectedLanguageKey,
-    };
-    axios.post(`https://libretranslate.de/translate`, data).then((response) => {
-      setResultText(response.data.translatedText);
-    });
-  };
+  //   let data = {
+  //     q: inputText,
+  //     source: detectLanguageKey,
+  //     target: selectedLanguageKey,
+  //   };
+  //   axios.post(`https://libretranslate.de/translate`, data).then((response) => {
+  //     setResultText(response.data.translatedText);
+  //   });
+  // };
 
-  const languageKey = (selectedLanguage) => {
-    setLanguageKey(selectedLanguage.target.value);
-  };
+  // const languageKey = (selectedLanguage) => {
+  //   setLanguageKey(selectedLanguage.target.value);
+  // };
 
-  useEffect(() => {
-    axios.get(`https://libretranslate.de/languages`).then((response) => {
-      setLanguagesList(response.data);
-    });
+  // useEffect(() => {
+  //   axios.get(`https://libretranslate.de/languages`).then((response) => {
+  //     setLanguagesList(response.data);
+  //   });
 
-    getLanguageSource();
-  }, [inputText]);
+  //   getLanguageSource();
+  // }, [inputText]);
 
   return (
     <div className="App" id="app">
@@ -187,6 +199,18 @@ function App() {
             <label>Profile photo</label>
             <input type="file" onChange={photoUpload}></input>
             <button onClick={generateRandomImage}>Random Image</button>
+          </div>
+
+          <div className="box">
+            <label>Video Upload  </label>
+            <input
+              ref={inputRef}
+              className="VideoInput_input"
+              type="file"
+              onChange={handleFileChange}
+              accept=".mov,.mp4"
+            ></input>
+            <button onClick={handleChoose}>Choose Video</button>
           </div>
 
           <div className="box">
@@ -269,15 +293,14 @@ function App() {
               onChange={handleOnChangeReligion}
             ></input>
             <label>Religious Background</label>
-            <br />
-            <textarea
-              className="textarea"
+            
+            <input
               rows="5"
               cols="20"
               value={religion}
               onChange={handleReligion}
-            ></textarea>
-            <br />
+            ></input>
+            
             <button onClick={generateRandomReligion}>Random Religion</button>
           </div>
           <div className="box">
@@ -342,12 +365,11 @@ function App() {
           <h2 className="box" id="box">
             Result
           </h2>
-          
-          <div className="box" id="rightbox">
-          <div className="imagediv">
-            {image ? <img src={image} alt="profile photo" /> : null}
-          </div>
 
+          <div className="box" id="rightbox">
+            <div className="imagediv">
+              {image ? <img src={image} alt="profile photo" /> : null}
+            </div>
             {name} {isCheckedLocation ? `is from the ${location}` : null} .
             {isCheckedSchool
               ? `${
@@ -366,7 +388,20 @@ function App() {
             {gender == "male" ? "He" : "She"}{" "}
             {isChecked ? `meet you for ${meeting}` : null}
           </div>
-          <h2 className="box" id="box">
+          <div className="box">
+          {source && (
+              <video
+                className="VideoInput_video"
+                width="100%"
+                height={300}
+                controls
+                src={source}
+              />
+            )}
+            
+            </div>
+            
+          {/* <h2 className="box" id="box">
             Translate
           </h2>
 
@@ -396,7 +431,7 @@ function App() {
               value={resultText}
             ></textarea>
             <button onClick={translateText}>Translate</button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
