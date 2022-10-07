@@ -1,10 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./App.css";
-import "../public/main.png";
-import "../public/pic1.jpg";
-import "../public/pic2.png";
-import "../public/pic3.jpg";
 
 function App() {
   const [name, setName] = useState("Alok");
@@ -131,8 +127,13 @@ function App() {
   // console.log(gender);
 
   const generateRandomImage = () => {
-    let schoolArray = ["./pic1.jpg", "./pic2.png", "/pic3.jpg"];
-    setImage(schoolArray[Math.floor(Math.random() * 3)]);
+    let schoolArray = [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxERfeH8CH5Hfr-fdowRXIGzqlilsEzmPzg&usqp=CAU",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHDRlp-KGr_M94k_oor4Odjn2UzbAS7n1YoA&usqp=CAU",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTueWgyLQfGtSj9eKUln2JOeFsrDt5UGAMW_1xMw8mqFb5ExXlPfITKgoszymV4pQNH-7U&usqp=CAU",
+      "https://avatars.githubusercontent.com/u/1071625?v=4",
+    ];
+    setImage(schoolArray[Math.floor(Math.random() * schoolArray.length)]);
   };
 
   const handleFileChange = (event) => {
@@ -140,54 +141,6 @@ function App() {
     const url = URL.createObjectURL(file);
     setSource(url);
   };
-
-  // const handleChoose = (event) => {
-  //   inputRef.current.click();
-  // };
-
-  // ---------translate------
-
-  // const [inputText, setInputText] = useState("");
-  // const [resultText, setResultText] = useState("");
-  // const [selectedLanguageKey, setLanguageKey] = useState("");
-  // const [languagesList, setLanguagesList] = useState([]);
-  // const [detectLanguageKey, setdetectedLanguageKey] = useState("");
-
-  // const getLanguageSource = () => {
-  //   axios
-  //     .post(`https://libretranslate.de/detect`, {
-  //       q: inputText,
-  //     })
-  //     .then((response) => {
-  //       setdetectedLanguageKey(response.data[0].language);
-  //     });
-  // };
-  // const translateText = () => {
-  //   setResultText(inputText);
-
-  //   getLanguageSource();
-
-  //   let data = {
-  //     q: inputText,
-  //     source: detectLanguageKey,
-  //     target: selectedLanguageKey,
-  //   };
-  //   axios.post(`https://libretranslate.de/translate`, data).then((response) => {
-  //     setResultText(response.data.translatedText);
-  //   });
-  // };
-
-  // const languageKey = (selectedLanguage) => {
-  //   setLanguageKey(selectedLanguage.target.value);
-  // };
-
-  // useEffect(() => {
-  //   axios.get(`https://libretranslate.de/languages`).then((response) => {
-  //     setLanguagesList(response.data);
-  //   });
-
-  //   getLanguageSource();
-  // }, [inputText]);
 
   return (
     <div className="App" id="app">
@@ -202,15 +155,13 @@ function App() {
           </div>
 
           <div className="box">
-            <label>Video Upload  </label>
+            <label>Video Upload </label>
             <input
               ref={inputRef}
-              // className="VideoInput_input"
               type="file"
               onChange={handleFileChange}
               accept=".mov,.mp4"
             />
-            
           </div>
 
           <div className="box">
@@ -293,14 +244,14 @@ function App() {
               onChange={handleOnChangeReligion}
             ></input>
             <label>Religious Background</label>
-            
+
             <input
               rows="5"
               cols="20"
               value={religion}
               onChange={handleReligion}
             ></input>
-            
+
             <button onClick={generateRandomReligion}>Random Religion</button>
           </div>
           <div className="box">
@@ -389,7 +340,7 @@ function App() {
             {isChecked ? `meet you for ${meeting}` : null}
           </div>
           <div className="box">
-          {source && (
+            {source && (
               <video
                 className="VideoInput_video"
                 width="100%"
@@ -398,40 +349,7 @@ function App() {
                 src={source}
               />
             )}
-            
-            </div>
-            
-          {/* <h2 className="box" id="box">
-            Translate
-          </h2>
-
-          <div className="box">
-            <textarea
-              className="textarea"
-              rows="5"
-              cols="20"
-              placeholder="Type Text to Translate.."
-              onChange={(e) => setInputText(e.target.value)}
-            ></textarea>
           </div>
-          <div className="box">
-            <select className="language-select" onChange={languageKey}>
-              <option>Please Select Language..</option>
-              {languagesList.map((language) => {
-                return <option value={language.code}>{language.name}</option>;
-              })}
-            </select>
-          </div>
-          <div className="box">
-            <textarea
-              className="textarea"
-              placeholder="Result Translation.."
-              rows="5"
-              cols="20"
-              value={resultText}
-            ></textarea>
-            <button onClick={translateText}>Translate</button>
-          </div> */}
         </div>
       </div>
     </div>
