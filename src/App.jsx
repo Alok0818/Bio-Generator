@@ -141,9 +141,9 @@ function App() {
     setSource(url);
   };
 
-  const handleChoose = (event) => {
-    inputRef.current.click();
-  };
+  // const handleChoose = (event) => {
+  //   inputRef.current.click();
+  // };
 
   // ---------translate------
 
@@ -205,12 +205,12 @@ function App() {
             <label>Video Upload  </label>
             <input
               ref={inputRef}
-              className="VideoInput_input"
+              // className="VideoInput_input"
               type="file"
               onChange={handleFileChange}
               accept=".mov,.mp4"
-            ></input>
-            <button onClick={handleChoose}>Choose Video</button>
+            />
+            
           </div>
 
           <div className="box">

@@ -119,9 +119,9 @@ select{
   border: 1px solid #ddd;
 }
 
-.VideoInput_input {
+/* .VideoInput_input {
   display: none;
-}
+} */
 
 .VideoInput_video {
   display: block;
